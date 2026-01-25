@@ -1,0 +1,6 @@
+@Medor_HostAddress = https://data-api.coindesk.com/spot/v1/latest/tick?market=coinbase&instruments=BTC-EUR
+
+GET {{Medor_HostAddress}}
+Accept: application/json
+
+###
