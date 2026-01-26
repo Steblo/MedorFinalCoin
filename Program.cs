@@ -10,6 +10,8 @@ builder.Services.AddControllers();
 builder.Services.AddHttpClient<ICoindeskService, CoindeskService>();
 builder.Services.AddScoped<ISavedService, SavedService>();
 
+
+builder.Services.AddHttpClient<ICnbService, CnbService>();
 builder.Services.AddHttpClient<ICoindeskService, CoindeskService>()
     .ConfigurePrimaryHttpMessageHandler(() =>
     {
