@@ -11,7 +11,12 @@ builder.Services.AddHttpClient<ICoindeskService, CoindeskService>();
 builder.Services.AddScoped<ISavedService, SavedService>();
 
 
-builder.Services.AddHttpClient<ICnbService, CnbService>();
+builder.Services.AddHttpClient<ICnbService, CnbService>(client =>
+{
+    client.BaseAddress = new Uri("https://www.cnb.cz/");
+    client.DefaultRequestHeaders.Add("Accept", "text/plain");
+});
+
 builder.Services.AddHttpClient<ICoindeskService, CoindeskService>()
     .ConfigurePrimaryHttpMessageHandler(() =>
     {
