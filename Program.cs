@@ -19,15 +19,6 @@ builder.Services.AddHttpClient<ICoindeskService, CoindeskService>()
         };
     });
 
-builder.Services.AddHttpClient<ICnbService, CnbService>()
-    .ConfigurePrimaryHttpMessageHandler(() =>
-    {
-        return new HttpClientHandler
-        {
-            ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true
-        };
-    });
-
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
 
