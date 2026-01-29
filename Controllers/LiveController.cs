@@ -1,25 +1,27 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Shared.Data.Models.Dtos;
-using DC.Services;
+﻿using DC.Services;
+using Microsoft.AspNetCore.Mvc;
 
-namespace DC.Controllers
+[ApiController]
+[Route("api/[controller]")]
+public class LiveController : ControllerBase
 {
-    [ApiController]
-    [Route("api/[controller]")]
-    public class LiveController : ControllerBase
+    private readonly ILiveService _liveService;
+
+    public LiveController(ILiveService liveService)
     {
-        private readonly ILiveService _service;
+        _liveService = liveService;
+    }
 
-        public LiveController(ILiveService service)
+    [HttpGet("{code}")]
+    public async Task<ActionResult<CnbRateDto>> GetRate(string code)
+    {
+        var rateDto = await _liveService.GetRateAsync(code);
+        if (rateDto is null) return NotFound();
+        return Ok(new CnbRateDto
         {
-            _service = service;
-        }
-
-        [HttpGet]
-        public async Task<ActionResult<LiveRateDto>> GetLiveRate()
-        {
-            var result = await _service.GetLiveRateAsync();
-            return Ok(result);
-        }
+            Currency = code.ToUpper(),
+            Rate = rateDto.Rate,
+            Date = DateTime.UtcNow
+        });
     }
 }

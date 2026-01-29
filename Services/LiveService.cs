@@ -1,27 +1,31 @@
 ﻿using Shared.Data.Models.Dtos;
+using System.Text.Json;
 
 namespace DC.Services
 {
-    public class LiveService(HttpClient http) : ILiveService
+    public class LiveService : ILiveService
     {
-        private readonly HttpClient _http = http;
+        private readonly HttpClient _httpClient;
 
-        public async Task<LiveRateDto> GetLiveRateAsync()
+        public LiveService(HttpClient httpClient)
         {
-            var coinDeskUrl = "https://data-api.coindesk.com/spot/v1/latest/tick?market=coinbase&instruments=BTC-EUR";
-            var coinDeskJson = await _http.GetStringAsync(coinDeskUrl);
+            _httpClient = httpClient;
+            // Base URL na CNB API projekt
+            _httpClient.BaseAddress = new Uri("https://localhost:7130/");
+        }
 
-            // TODO: parse JSON
-            // TODO: fetch CNB
-            // TODO: compute CZK price
+        public async Task<CnbRateDto?> GetRateAsync(string code)
+        {
+            var response = await _httpClient.GetAsync($"api/Cnb/{code}");
+            if (!response.IsSuccessStatusCode) return null;
 
-            return new LiveRateDto
+            var stream = await response.Content.ReadAsStreamAsync();
+            var dto = await JsonSerializer.DeserializeAsync<CnbRateDto>(stream, new JsonSerializerOptions
             {
-                Symbol = "BTC",
-                EurPrice = 0,
-                CzkPrice = 0,
-                Timestamp = DateTime.UtcNow
-            };
+                PropertyNameCaseInsensitive = true
+            });
+
+            return dto;
         }
     }
 }

@@ -1,5 +1,6 @@
 <Solution>
   <Project Path="../CNB/CNB.csproj" Id="c2ba28bb-69a4-4c4f-8b0e-487360dd6ada" />
+  <Project Path="../FE/FE.csproj" Id="2f82a626-7e5f-4e09-a67e-2503089e828d" />
   <Project Path="../Shared.Data/Shared.Data.csproj" Id="76c40543-0aef-47f5-9fc2-86b0261252fb" />
   <Project Path="DC.csproj" />
 </Solution>

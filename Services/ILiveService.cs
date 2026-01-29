@@ -4,6 +4,6 @@ namespace DC.Services
 {
     public interface ILiveService
     {
-        Task<LiveRateDto> GetLiveRateAsync();
+        Task<CnbRateDto?> GetRateAsync(string code);
     }
 }

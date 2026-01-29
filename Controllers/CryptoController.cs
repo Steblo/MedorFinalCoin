@@ -1,6 +1,6 @@
-using Microsoft.AspNetCore.Mvc;
+using DC.Models.DC.Models;
 using DC.Services;
-using Shared.Data.Models.Dtos;
+using Microsoft.AspNetCore.Mvc;
 
 namespace DC.Controllers
 {
@@ -8,18 +8,19 @@ namespace DC.Controllers
     [Route("api/[controller]")]
     public class CryptoController : ControllerBase
     {
-        private readonly ICoindeskService _coindesk;
+        private readonly ICryptoService _cryptoService;
 
-        public CryptoController(ICoindeskService coindesk)
+        public CryptoController(ICryptoService cryptoService)
         {
-            _coindesk = coindesk;
+            _cryptoService = cryptoService;
         }
 
-        [HttpGet("btc-eur")]
-        public async Task<ActionResult<LiveRateDto>> GetBtcEur()
+        [HttpGet("{instrument}")]
+        public async Task<ActionResult<CryptoRateDto>> GetCryptoRate(string instrument)
         {
-            var result = await _coindesk.GetBtcEurAsync();
-            return Ok(result);
+            var rate = await _cryptoService.GetCryptoRateAsync(instrument);
+            if (rate == null) return NotFound($"Instrument {instrument} nebyl nalezen.");
+            return Ok(rate);
         }
     }
 }

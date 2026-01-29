@@ -1,6 +1,6 @@
 ﻿using DC.Services;
-using Shared.Data;
-using Shared.Data.Models;
+using Microsoft.EntityFrameworkCore;
+using Shared.Data.Models.Dtos;
 
 public class SavedService : ISavedService
 {
@@ -11,9 +11,33 @@ public class SavedService : ISavedService
         _db = db;
     }
 
-    public async Task SaveAsync(SavedRate rate)
+    public async Task SaveAsync(SaveRateDto dto)
     {
-        _db.SavedRates.Add(rate);
+        var entity = new SavedRate
+        {
+            Code = dto.Code,
+            Rate = dto.Rate,
+            SavedAt = DateTime.UtcNow
+        };
+
+        _db.SavedRates.Add(entity);
         await _db.SaveChangesAsync();
+    }
+
+    public Task SaveAsync(SavedRate rate)
+    {
+        throw new NotImplementedException();
+    }
+
+    public async Task<List<SavedRateDto>> GetAllAsync()
+    {
+        return await _db.SavedRates
+            .Select(r => new SavedRateDto
+            {
+                Code = r.Code,
+                Rate = r.Rate,
+                SavedAt = r.SavedAt
+            })
+            .ToListAsync();
     }
 }
